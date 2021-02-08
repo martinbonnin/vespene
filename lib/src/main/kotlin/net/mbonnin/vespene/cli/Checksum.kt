@@ -1,4 +1,4 @@
-package net.mbonnin.vespene
+package net.mbonnin.vespene.cli
 
 import okio.BufferedSource
 import okio.ByteString.Companion.toByteString

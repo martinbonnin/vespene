@@ -1,4 +1,4 @@
-package net.mbonnin.vespene
+package net.mbonnin.vespene.cli
 
 import com.squareup.moshi.JsonClass
 import okhttp3.Credentials
@@ -19,24 +19,27 @@ import java.util.concurrent.TimeUnit
  * - https://github.com/Codearte/gradle-nexus-staging-plugin
  * - https://github.com/marcphilipp/nexus-publish-plugin
  */
-interface NexusApi {
+interface NexusStagingApi {
   @GET("staging/profile_repositories")
-  suspend fun getProfileRepositories(): Response<Data<List<Repository>>>
+  suspend fun getRepositories(): Response<Data<List<Repository>>>
 
   @GET("staging/repository/{repositoryId}")
   suspend fun getRepository(@Path("repositoryId") repositoryId: String): Response<Repository>
 
   @POST("staging/bulk/close")
-  suspend fun closeRepository(@Body input: Data<TransitionRepositoryInput>): Response<Unit>
+  suspend fun closeRepositories(@Body input: Data<TransitionRepositoryInput>): Response<Unit>
 
   @POST("staging/bulk/promote")
-  suspend fun releaseRepository(@Body input: Data<TransitionRepositoryInput>): Response<Unit>
+  suspend fun releaseRepositories(@Body input: Data<TransitionRepositoryInput>): Response<Unit>
+
+  @POST("staging/bulk/drop")
+  suspend fun dropRepositories(@Body input: Data<TransitionRepositoryInput>): Response<Unit>
 
   @GET("staging/profiles")
-  suspend fun stagingProfiles(): Response<Data<List<StagingProfile>>>
+  suspend fun getProfiles(): Response<Data<List<StagingProfile>>>
 
   @POST("staging/profiles/{stagingProfileId}/start")
-  suspend fun startStagingRepository(
+  suspend fun createRepository(
     @Path("stagingProfileId") stagingProfileId: String,
     @Body description: Data<Description>
   ): Response<Data<StagingRepository>>
@@ -69,14 +72,14 @@ fun NexusApi(
 fun NexusApi(
   okHttpClient: OkHttpClient,
   baseUrl: String = "https://oss.sonatype.org/service/local/",
-): NexusApi {
+): NexusStagingApi {
   val retrofit = Retrofit.Builder()
     .baseUrl(baseUrl)
     .client(okHttpClient)
     .addConverterFactory(MoshiConverterFactory.create())
     .build()
 
-  return retrofit.create(NexusApi::class.java)!!
+  return retrofit.create(NexusStagingApi::class.java)
 }
 
 fun OkHttpClient(username: String, password: String) = OkHttpClient.Builder().addInterceptor { chain ->
@@ -84,6 +87,7 @@ fun OkHttpClient(username: String, password: String) = OkHttpClient.Builder().ad
   builder.addHeader("Authorization", Credentials.basic(username, password))
   builder.addHeader("Accept", "application/json")
   builder.addHeader("Content-Type", "application/json")
+  builder.addHeader("User-Agent", "vespene")
   chain.proceed(builder.build())
 }
   .readTimeout(600, TimeUnit.SECONDS) // Opening a staging repository can take 2-3 minutes

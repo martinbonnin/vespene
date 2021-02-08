@@ -1,7 +1,7 @@
 package net.mbonnin.vespene
 
+import net.mbonnin.vespene.cli.pgp.armor
 import okio.BufferedSource
-import org.bouncycastle.bcpg.ArmoredOutputStream
 import org.bouncycastle.openpgp.PGPSecretKey
 import org.bouncycastle.openpgp.PGPSignature
 import org.bouncycastle.openpgp.PGPSignatureGenerator
@@ -10,8 +10,6 @@ import org.bouncycastle.openpgp.jcajce.JcaPGPSecretKeyRing
 import org.bouncycastle.openpgp.operator.bc.BcPBESecretKeyDecryptorBuilder
 import org.bouncycastle.openpgp.operator.bc.BcPGPContentSignerBuilder
 import org.bouncycastle.openpgp.operator.bc.BcPGPDigestCalculatorProvider
-import org.bouncycastle.bcpg.BCPGOutputStream
-import java.io.ByteArrayOutputStream
 
 /**
  * Creates a PGP signature from the given BufferedSource
@@ -37,12 +35,7 @@ fun BufferedSource.sign(key: String, keyPassword: String): String {
   generator.update(readByteArray())
   val signature = generator.generate()
 
-  val os = ByteArrayOutputStream()
-  val bufferedOutput = BCPGOutputStream(ArmoredOutputStream(os))
-  signature.encode(bufferedOutput)
-  bufferedOutput.flush()
-  bufferedOutput.close()
-
-
-  return String(os.toByteArray())
+  return armor {
+    signature.encode(it)
+  }
 }
