@@ -6,7 +6,7 @@ plugins {
 }
 
 dependencies {
-  implementation(project(":lib"))
+  implementation(project(":vespene-lib"))
   implementation("com.github.ajalt.clikt:clikt:3.1.0")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 }
