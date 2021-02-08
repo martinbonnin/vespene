@@ -1,4 +1,4 @@
-⚡ Vespene adds [fuel](https://starcraft.fandom.com/wiki/Vespene_gas) to your [Nexus](https://www.sonatype.com/nexus/repository-oss) repositories .
+⚡ Vespene adds [fuel](https://starcraft.fandom.com/wiki/Vespene_gas) to your [Nexus](https://www.sonatype.com/nexus/repository-oss) repositories.
 
 [Maven Central](https://search.maven.org/) is a great place to host maven packages but publishing often comes with some friction. 
 
