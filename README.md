@@ -35,6 +35,7 @@ lftp https://jcenter.bintray.com/com/example/
 > mirror . my-local-repo
 # Download the script from this repo
 curl -s "https://raw.githubusercontent.com/martinbonnin/vespene/main/upload.kts" > upload.kts
+chmod +x upload.kts
 # install kscript if you don't have it already
 curl -s "https://get.sdkman.io" | bash
 sdk install kscript
@@ -42,7 +43,7 @@ sdk install kscript
 export SONATYPE_NEXUS_USERNAME=... #(this is from your Sonatype jira account)
 export SONATYPE_NEXUS_PASSWORD=...
 # Export your private key 
-gpg --armour --export-secret-keys $keyId > privkey.asc
+export GPG_PRIVATE_KEY="$(gpg --armour --export-secret-keys KEY_ID)"
 export GPG_PRIVATE_KEY_PASSWORD=...
 
 # Read the script and **make sure you understand what it does**
@@ -52,7 +53,7 @@ export GPG_PRIVATE_KEY_PASSWORD=...
 # Run it!
 # During upload, it will create one staging repository per version and upload all files. 
 # It will take time!
-./upload.kts --input my-local-repo/ --scratch tmp/ --group com.example --private-key privkey.asc [--pom-project-url https://...]
+./upload.kts --input my-local-repo/ --scratch tmp/ --group com.example [--pom-project-url https://...]
  
 # Go to https://oss.sonatype.org/#stagingRepositories, check your contents and hit "Release" for repositories 
 # that look good. If there are errors, tweak the script until checks pass

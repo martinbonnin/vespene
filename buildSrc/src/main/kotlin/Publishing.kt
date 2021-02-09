@@ -56,7 +56,7 @@ fun Project.configurePublishing() {
             this.description.set("A set of tools to work with Sonatype Nexus repositories")
             this.url.set("https://github.com/martinbonnin/vespene")
             this.scm {
-              this.url.set("https://github.com/martinbonnin/vespene")
+              it.url.set("https://github.com/martinbonnin/vespene")
             }
             this.licenses {
               it.license {

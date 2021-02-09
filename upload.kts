@@ -139,7 +139,7 @@ class MainCommand : CliktCommand() {
     val allIds = client.getProfiles()
     check(allIds.size == 1) {
       val prettyIds = allIds.map {
-        "- ${it.name}: --staging-profile-id=${it.id}"
+        "- ${it.name}: --profile-id=${it.id}"
       }.joinToString("\n")
       "Multiple profileIds found. Use one of:\n${prettyIds}\n"
     }
