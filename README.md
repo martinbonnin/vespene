@@ -55,8 +55,10 @@ export GPG_PRIVATE_KEY_PASSWORD=...
 # It will take time!
 ./upload.kts --input my-local-repo/ --scratch tmp/ --group com.example [--pom-project-url https://...]
  
-# Go to https://oss.sonatype.org/#stagingRepositories, check your contents and hit "Release" for repositories 
-# that look good. If there are errors, tweak the script until checks pass
+# upload.kts does not release automatically (also it's easy to add it)
+# To release, go to https://oss.sonatype.org/#stagingRepositories, check your contents and hit "Release" for repositories 
+# that look good. 
+# If there are errors, tweak the script until checks pass
 
 # For other options about specifying versions, pom fields, etc, use --help
 ./upload.kts --help 
