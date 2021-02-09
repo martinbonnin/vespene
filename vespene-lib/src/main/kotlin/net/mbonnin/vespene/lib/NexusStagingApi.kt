@@ -1,4 +1,4 @@
-package net.mbonnin.vespene.cli
+package net.mbonnin.vespene.lib
 
 import com.squareup.moshi.JsonClass
 import okhttp3.Credentials

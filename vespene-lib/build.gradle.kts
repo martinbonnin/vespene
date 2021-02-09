@@ -1,4 +1,7 @@
 plugins {
+  id("maven-publish")
+  `java-library`
+  id("signing")
   kotlin("jvm")
   kotlin("kapt")
   id("net.mbonnin.one.eight")
@@ -18,3 +21,4 @@ dependencies {
   testImplementation("junit:junit:4.12")
 }
 
+configurePublishing()

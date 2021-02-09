@@ -1,4 +1,4 @@
-package net.mbonnin.vespene.cli
+package net.mbonnin.vespene.lib
 
 import kotlinx.coroutines.delay
 import okhttp3.*
@@ -41,7 +41,7 @@ class NexusStagingClient(
    * The directory can contain several modules/versions
    *
    */
-  suspend fun upload(directory: File, profileId: String, progress: (Int, Int, String) -> Unit): String {
+  suspend fun upload(directory: File, profileId: String, progress: ((Int, Int, String) -> Unit)? = null): String {
     val response = nexusApi.createRepository(profileId, Data(Description("Staging Profile")))
     check(response.isSuccessful) {
       "createRepository error ${response.code()}: ${response.errorBody()?.string()} "
@@ -59,7 +59,7 @@ class NexusStagingClient(
 
     files.forEachIndexed { index, file ->
       val relativePath = file.relativeTo(directory).path
-      progress(index, files.size, relativePath)
+      progress?.invoke(index, files.size, relativePath)
 
       val url = "${baseUrl}staging/deployByRepositoryId/${repositoryId}/$relativePath"
       val request = Request.Builder()

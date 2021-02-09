@@ -1,6 +1,6 @@
 package net.mbonnin.vespene
 
-import net.mbonnin.vespene.cli.pgp.armor
+import net.mbonnin.vespene.lib.pgp.armor
 import okio.BufferedSource
 import org.bouncycastle.openpgp.PGPSecretKey
 import org.bouncycastle.openpgp.PGPSignature

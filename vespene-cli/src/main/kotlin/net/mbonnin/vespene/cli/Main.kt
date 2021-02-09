@@ -6,6 +6,7 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import kotlinx.coroutines.runBlocking
+import net.mbonnin.vespene.lib.NexusStagingClient
 import java.io.File
 import java.lang.IllegalArgumentException
 import kotlin.system.exitProcess
@@ -25,7 +26,7 @@ class MainCommand : CliktCommand() {
   }
 }
 
-abstract class BaseCommand : CliktCommand() {
+abstract class BaseCommand(help: String) : CliktCommand(help = help) {
   private val username by option(help = "your nexus username. For OSSRH, this is your Sonatype jira username. Defaults to reading the 'SONATYPE_NEXUS_USERNAME' environment variable.")
   private val password by option(help = "your nexus password. For OSSRH, this is your Sonatype jira password. Defaults to reading the 'SONATYPE_NEXUS_PASSWORD' environment variable.")
 
@@ -38,9 +39,9 @@ abstract class BaseCommand : CliktCommand() {
 
     val client = NexusStagingClient(
       username = username ?: System.getenv("SONATYPE_NEXUS_USERNAME")
-      ?: throw IllegalArgumentException("Please specify username"),
+      ?: throw IllegalArgumentException("Please specify --username or SONATYPE_NEXUS_USERNAME environment variable"),
       password = password ?: System.getenv("SONATYPE_NEXUS_PASSWORD")
-      ?: throw IllegalArgumentException("Please specify password"),
+      ?: throw IllegalArgumentException("Please specify --password or SONATYPE_NEXUS_PASSWORD environment variable"),
     )
     runBlocking {
       run(client)
@@ -52,7 +53,7 @@ abstract class BaseCommand : CliktCommand() {
   abstract suspend fun run(client: NexusStagingClient)
 }
 
-class UploadCommand : BaseCommand() {
+class UploadCommand : BaseCommand(help = "create a repository and upload files to it.") {
   private val dir by argument(help = "the directory with the files to upload. It typically contains maven hierarchy of files like 'com/example/module/version/module-version.jar'")
 
   //private val closeAndRelease by option(help = "automatically close and release after the upload").flag()
@@ -85,7 +86,7 @@ class UploadCommand : BaseCommand() {
   }
 }
 
-class Close : BaseCommand() {
+class Close : BaseCommand(help = "close a repository. This triggers checks.") {
   private val repositoryId by argument(help = "the repositoryId to close")
 
   override suspend fun run(client: NexusStagingClient) {
@@ -94,7 +95,7 @@ class Close : BaseCommand() {
   }
 }
 
-class Release : BaseCommand() {
+class Release : BaseCommand(help = "release a repository") {
   private val dropAfterRelease by option().flag(default = true)
   private val repositoryId by argument(help = "the repositoryId to release")
 
@@ -104,7 +105,7 @@ class Release : BaseCommand() {
   }
 }
 
-class Drop : BaseCommand() {
+class Drop : BaseCommand(help = "drop a repository") {
   private val repositoryId by argument(help = "the repositoryId to drop")
 
   override suspend fun run(client: NexusStagingClient) {
@@ -113,7 +114,7 @@ class Drop : BaseCommand() {
   }
 }
 
-class CloseAndRelease : BaseCommand() {
+class CloseAndRelease : BaseCommand("close and release a repository. Block until all checks are done and the repository is released.") {
   private val dropAfterRelease by option().flag(default = true)
   private val repositoryId by argument(help = "the repositoryId to close")
 

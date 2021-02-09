@@ -1,4 +1,4 @@
-package net.mbonnin.vespene.cli
+package net.mbonnin.vespene.lib
 
 import okio.BufferedSource
 import okio.ByteString.Companion.toByteString
@@ -24,3 +24,4 @@ private fun BufferedSource.digest(name: String): String {
 
 fun BufferedSource.md5() = digest("MD5")
 fun BufferedSource.sha1() = digest("SHA1")
+

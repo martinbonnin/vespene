@@ -1,4 +1,4 @@
-package net.mbonnin.vespene.cli.pgp
+package net.mbonnin.vespene.lib.pgp
 
 import org.bouncycastle.bcpg.ArmoredOutputStream
 import org.bouncycastle.bcpg.BCPGOutputStream
