@@ -1,7 +1,6 @@
 #!/usr/bin/env kscript
 
-@file:MavenRepository("local","file:///Users/mbonnin/.m2/repository")
-//@file:Repository("file:///Users/mbonnin/.m2/repository")
+//@file:MavenRepository("local","file:///Users/mbonnin/.m2/repository")
 @file:DependsOn("net.mbonnin.vespene:vespene-lib:0.2")
 @file:DependsOn("com.github.ajalt.clikt:clikt-jvm:3.1.0")
 @file:DependsOn("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.2")

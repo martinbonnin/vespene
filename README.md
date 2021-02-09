@@ -44,9 +44,16 @@ export SONATYPE_NEXUS_PASSWORD=...
 # Export your private key 
 gpg --armour --export-secret-keys $keyId > privkey.asc
 export GPG_PRIVATE_KEY_PASSWORD=...
-# Run the script. It will patch .pom, add missing .md5 and .asc and upload everything 
-# During upload, it will create one staging repository per version and upload all files. It will take time!
-./upload.kts --input my-local-repo/ --scratch tmp --group com.example --private-key privkey.asc [--pom-project-url https://...] 
+
+# Read the script and **make sure you understand what it does**
+# In a nutshell, it will patch .pom files, add missing .md5 and .asc files and upload everything 
+# If that doesn't fit your requirements, edit the script with `kscript --idea upload.kts`
+
+# Run it!
+# During upload, it will create one staging repository per version and upload all files. 
+# It will take time!
+./upload.kts --input my-local-repo/ --scratch tmp/ --group com.example --private-key privkey.asc [--pom-project-url https://...]
+ 
 # Go to https://oss.sonatype.org/#stagingRepositories, check your contents and hit "Release" for repositories 
 # that look good. If there are errors, tweak the script until checks pass
 
