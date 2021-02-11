@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "net.mbonnin.vespene"
-version = "0.3"
+version = "0.4"
 
 allprojects {
   repositories {

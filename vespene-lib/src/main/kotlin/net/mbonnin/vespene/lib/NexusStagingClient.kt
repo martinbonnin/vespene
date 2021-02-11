@@ -138,10 +138,13 @@ class NexusStagingClient(
   /**
    * Creates a new staging repository.
    *
+   * @param profileId: the profileId used to create the repository
+   * @param description: a description of the repository
+   *
    * @return the id of the created repository
    */
-  suspend fun createRepository(profileId: String): String {
-    val response = nexusApi.createRepository(profileId, Data(Description("Vespene Staging Repository")))
+  suspend fun createRepository(profileId: String, description: String = "Vespene Staging Repository"): String {
+    val response = nexusApi.createRepository(profileId, Data(Description(description)))
     check(response.isSuccessful && response.body() != null) {
       "createRepository($profileId) error:\n${response.errorBody()?.string()}"
     }

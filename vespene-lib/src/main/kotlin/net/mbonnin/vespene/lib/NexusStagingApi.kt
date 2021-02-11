@@ -60,7 +60,7 @@ class Description(val description: String)
 class CreatedRepository(var stagedRepositoryId: String)
 
 @JsonClass(generateAdapter = true)
-class Repository(val repositoryId: String, val transitioning: Boolean, val type: String)
+class Repository(val repositoryId: String, val transitioning: Boolean, val type: String, val description: String?)
 
 @JsonClass(generateAdapter = true)
 class TransitionRepositoryInput(val stagedRepositoryIds: List<String>, val autoDropAfterRelease: Boolean? = null)
