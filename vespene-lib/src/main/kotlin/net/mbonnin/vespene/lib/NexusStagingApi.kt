@@ -18,6 +18,8 @@ import java.util.concurrent.TimeUnit
  * - Staging upload: https://support.sonatype.com/hc/en-us/articles/213465868-Uploading-to-a-Staging-Repository-via-REST-API
  * - https://github.com/Codearte/gradle-nexus-staging-plugin
  * - https://github.com/marcphilipp/nexus-publish-plugin
+ *
+ * OSSRH is using a 2.x version of Nexus so a lot of the more recent 3.x docs do not apply
  */
 interface NexusStagingApi {
   @GET("staging/profile_repositories")
@@ -36,26 +38,26 @@ interface NexusStagingApi {
   suspend fun dropRepositories(@Body input: Data<TransitionRepositoryInput>): Response<Unit>
 
   @GET("staging/profiles")
-  suspend fun getProfiles(): Response<Data<List<StagingProfile>>>
+  suspend fun getProfiles(): Response<Data<List<Profile>>>
 
   @POST("staging/profiles/{stagingProfileId}/start")
   suspend fun createRepository(
     @Path("stagingProfileId") stagingProfileId: String,
     @Body description: Data<Description>
-  ): Response<Data<StagingRepository>>
+  ): Response<Data<CreatedRepository>>
 }
 
 @JsonClass(generateAdapter = true)
 class Data<T>(val data: T)
 
 @JsonClass(generateAdapter = true)
-class StagingProfile(val id: String, val name: String)
+class Profile(val id: String, val name: String)
 
 @JsonClass(generateAdapter = true)
 class Description(val description: String)
 
 @JsonClass(generateAdapter = true)
-class StagingRepository(var stagedRepositoryId: String)
+class CreatedRepository(var stagedRepositoryId: String)
 
 @JsonClass(generateAdapter = true)
 class Repository(val repositoryId: String, val transitioning: Boolean, val type: String)
