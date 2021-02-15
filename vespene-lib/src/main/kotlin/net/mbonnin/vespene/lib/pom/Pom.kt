@@ -15,8 +15,9 @@ fun File.fixIfNeeded(
   licenseUrl: String?,
   projectUrl: String?,
   scmUrl: String?,
-  developerName: String?
-
+  developerName: String?,
+  projectName: String?,
+  description: String?,
 ): String? {
   val factory = DocumentBuilderFactory.newInstance()
   val builder = factory.newDocumentBuilder()
@@ -79,6 +80,25 @@ fun File.fixIfNeeded(
           name.textContent = developerName
         })
       })
+    })
+  }
+  val existingName = projectNode.childNodes.toList().firstOrNull {
+    (it as? Element)?.tagName == "name"
+  }
+  if (existingName == null && projectName != null) {
+    hasChanged = true
+    projectNode.appendChild(document.createElement("name").also {
+      it.textContent = projectName
+    })
+  }
+
+  val existingDescription = projectNode.childNodes.toList().firstOrNull {
+    (it as? Element)?.tagName == "description"
+  }
+  if (existingDescription == null && description != null) {
+    hasChanged = true
+    projectNode.appendChild(document.createElement("description").also {
+      it.textContent = description
     })
   }
 
