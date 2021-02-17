@@ -186,8 +186,9 @@ class MainCommand : CliktCommand() {
               licenseName = pomLicenseName,
               developerName = pomDeveloperName,
               scmUrl = pomScmUrl,
-              projectName = projectName,
-              description = description
+              // uncomment when 0.5 is out
+//              projectName = projectName,
+//              description = description
             )
             if (newPom != null) {
               dataHasChanged = true
