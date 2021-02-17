@@ -6,6 +6,28 @@ import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
+import net.mbonnin.vespene.lib.NexusStagingClient
+import kotlinx.coroutines.runBlocking
+
+fun isPublishingBuild() = !System.getenv("GPG_PRIVATE_KEY").isNullOrBlank()
+val stagingUrl: String by lazy {
+  if (!isPublishingBuild()) {
+    // That's not great... but since this is called during build configuration, we don't want to create
+    // tons of staging repos
+    return@lazy "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+  }
+  val client = NexusStagingClient(
+    username = System.getenv("SONATYPE_NEXUS_USERNAME"),
+    password = System.getenv("SONATYPE_NEXUS_PASSWORD"),
+  )
+  val repositoryId = runBlocking {
+    client.createRepository(
+      profileId = System.getenv("VESPENE_STAGING_PROFILE_ID"),
+    )
+  }
+  println("publishing to '$repositoryId")
+  "https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${repositoryId}/"
+}
 
 fun Project.configurePublishing() {
   val sourcesJar = tasks.register("sourcesJar", Jar::class.java) {
@@ -76,7 +98,7 @@ fun Project.configurePublishing() {
     repositories {
       it.maven {
         it.name = "ossStaging"
-        it.url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+        it.url = uri(stagingUrl)
         it.credentials {
           it.username = System.getenv("SONATYPE_NEXUS_USERNAME")
           it.password = System.getenv("SONATYPE_NEXUS_PASSWORD")
@@ -85,14 +107,13 @@ fun Project.configurePublishing() {
     }
   }
 
-  extensions.findByType(SigningExtension::class.java)!!.run {
-    // GPG_PRIVATE_KEY should contain the armoured private key that starts with -----BEGIN PGP PRIVATE KEY BLOCK-----
-    // It can be obtained with gpg --armour --export-secret-keys KEY_ID
-    useInMemoryPgpKeys(System.getenv("VESPENE_GPG_PRIVATE_KEY"), System.getenv("VESPENE_GPG_PRIVATE_KEY_PASSWORD"))
-    val publicationsContainer = (extensions.getByName("publishing") as PublishingExtension).publications
-    sign(publicationsContainer)
-  }
-  tasks.withType(Sign::class.java) {
-    it.isEnabled = !System.getenv("GPG_PRIVATE_KEY").isNullOrBlank()
+  if (isPublishingBuild()) {
+    extensions.findByType(SigningExtension::class.java)!!.run {
+      // GPG_PRIVATE_KEY should contain the armoured private key that starts with -----BEGIN PGP PRIVATE KEY BLOCK-----
+      // It can be obtained with gpg --armour --export-secret-keys KEY_ID
+      useInMemoryPgpKeys(System.getenv("VESPENE_GPG_PRIVATE_KEY"), System.getenv("VESPENE_GPG_PRIVATE_KEY_PASSWORD"))
+      val publicationsContainer = (extensions.getByName("publishing") as PublishingExtension).publications
+      sign(publicationsContainer)
+    }
   }
 }

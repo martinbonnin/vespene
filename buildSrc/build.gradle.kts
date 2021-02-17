@@ -5,3 +5,8 @@ plugins {
 repositories {
   mavenCentral()
 }
+
+dependencies {
+  // use ourselves :)
+  implementation("net.mbonnin.vespene:vespene-lib:0.4")
+}
