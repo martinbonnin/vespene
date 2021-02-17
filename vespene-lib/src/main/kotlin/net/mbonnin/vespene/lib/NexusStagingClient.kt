@@ -48,8 +48,12 @@ class NexusStagingClient(
    * @param progress: a callback called for each file
    *
    */
-  suspend fun upload(directory: File, profileId: String, progress: ((index: Int, total: Int, path: String) -> Unit)? = null): String {
-    val response = nexusApi.createRepository(profileId, Data(Description("Vespene Staging Repository")))
+  suspend fun upload(
+    directory: File,
+    profileId: String,
+    comment: String = "Vespene Staging Repository",
+    progress: ((index: Int, total: Int, path: String) -> Unit)? = null): String {
+    val response = nexusApi.createRepository(profileId, Data(Description(comment)))
     check(response.isSuccessful) {
       "createRepository error ${response.code()}: ${response.errorBody()?.string()} "
     }

@@ -1,7 +1,7 @@
 #!/usr/bin/env kscript
 
-//@file:MavenRepository("local","file:///Users/mbonnin/.m2/repository")
-@file:DependsOn("net.mbonnin.vespene:vespene-lib:0.4")
+@file:MavenRepository("local","file:///Users/mbonnin/.m2/repository")
+@file:DependsOn("net.mbonnin.vespene:vespene-lib:0.5")
 @file:DependsOn("com.github.ajalt.clikt:clikt-jvm:3.1.0")
 @file:DependsOn("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.2")
 
@@ -102,20 +102,21 @@ class MainCommand : CliktCommand() {
         ?: throw IllegalArgumentException("Please specify --private-key-password or GPG_PRIVATE_KEY_PASSWORD environment variable"),
       )
 
-      println("uploading version $it...")
+      println("  uploading version $it...")
       var fileCount = 0
       runBlocking {
         val repositoryId = client.upload(
           directory = scratchDirectory,
-          profileId = findProfileId(client)
+          profileId = findProfileId(client),
+          comment = "Created by upload.kts for version $it"
         ) { index, total, _ ->
           print("\r$index/$total")
           System.out.flush()
           fileCount = total
         }
-        println("\r  $fileCount files uploaded")
+        println("\r  $fileCount files uploaded to '$repositoryId'")
 
-        println("\rclosing version $it...")
+        println("\r  closing version $it...")
         client.closeRepositories(listOf(repositoryId))
         ids.add(it to repositoryId)
       }
@@ -186,9 +187,8 @@ class MainCommand : CliktCommand() {
               licenseName = pomLicenseName,
               developerName = pomDeveloperName,
               scmUrl = pomScmUrl,
-              // uncomment when 0.5 is out
-//              projectName = projectName,
-//              description = description
+              projectName = projectName,
+              description = description
             )
             if (newPom != null) {
               dataHasChanged = true
