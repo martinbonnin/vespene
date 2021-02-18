@@ -19,6 +19,7 @@ val stagingUrl: String by lazy {
   val repositoryId = runBlocking {
     client.createRepository(
       profileId = System.getenv("VESPENE_STAGING_PROFILE_ID"),
+      description = "Staging repository for vespene"
     )
   }
   println("publishing to '$repositoryId")
