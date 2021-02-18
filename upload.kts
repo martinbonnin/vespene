@@ -48,9 +48,6 @@ class MainCommand : CliktCommand() {
   private val projectName by option()
   private val description by option()
 
-
-
-
   override fun run() {
     Thread.currentThread().setUncaughtExceptionHandler { _, e ->
       // OkHttp has threadpools that keep the process alive. kill everything

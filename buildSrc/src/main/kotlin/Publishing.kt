@@ -10,12 +10,8 @@ import net.mbonnin.vespene.lib.NexusStagingClient
 import kotlinx.coroutines.runBlocking
 
 fun isPublishingBuild() = !System.getenv("GPG_PRIVATE_KEY").isNullOrBlank()
+
 val stagingUrl: String by lazy {
-  if (!isPublishingBuild()) {
-    // That's not great... but since this is called during build configuration, we don't want to create
-    // tons of staging repos
-    return@lazy "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-  }
   val client = NexusStagingClient(
     username = System.getenv("SONATYPE_NEXUS_USERNAME"),
     password = System.getenv("SONATYPE_NEXUS_PASSWORD"),
@@ -98,7 +94,9 @@ fun Project.configurePublishing() {
     repositories {
       it.maven {
         it.name = "ossStaging"
-        it.url = uri(stagingUrl)
+        it.setUrl(provider {
+          stagingUrl
+        })
         it.credentials {
           it.username = System.getenv("SONATYPE_NEXUS_USERNAME")
           it.password = System.getenv("SONATYPE_NEXUS_PASSWORD")
