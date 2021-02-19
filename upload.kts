@@ -114,7 +114,7 @@ class MainCommand : CliktCommand() {
         fileCount = total
       }
       println("\r  $fileCount files uploaded to '$repositoryId'")
-      print("\r  $comment closing version...")
+      print("\r  $comment closing...")
       client.closeRepositories(listOf(repositoryId))
 
       /**
