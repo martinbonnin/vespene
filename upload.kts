@@ -112,9 +112,12 @@ class MainCommand : CliktCommand() {
           fileCount = total
         }
         println("\r  $fileCount files uploaded to '$repositoryId'")
-
         println("\r  closing version $it...")
         client.closeRepositories(listOf(repositoryId))
+        client.waitForClose(repositoryId = repositoryId, pollingIntervalMillis = 20_000) {
+          println("Waiting for build to close...")
+          System.out.flush()
+        }
         ids.add(it to repositoryId)
       }
     }
