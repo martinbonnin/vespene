@@ -31,6 +31,7 @@ To upload with the bundled [upload.kts](upload.kts) script:
 ```shell
 # Use lftp to download your existing files
 # Try not to download all of jcenter if possible 😅
+brew install lftp
 lftp https://jcenter.bintray.com/com/example/
 > mirror . my-local-repo
 # Download the script from this repo
@@ -51,11 +52,11 @@ export GPG_PRIVATE_KEY_PASSWORD=...
 # If that doesn't fit your requirements, edit the script with `kscript --idea upload.kts`
 
 # Run it!
-# During upload, it will create one staging repository per version and upload all files. 
+# During upload, it will create one staging repository and upload all files. 
 # It will take time!
 ./upload.kts --input my-local-repo/ --scratch tmp/ --group com.example [--pom-project-url https://...]
  
-# upload.kts does not release automatically (also it's easy to add it)
+# upload.kts does not release automatically (although it's easy to add it)
 # To release, go to https://oss.sonatype.org/#stagingRepositories, check your contents and hit "Release" for repositories 
 # that look good. 
 # If there are errors, tweak the script until checks pass

@@ -110,7 +110,7 @@ class NexusStagingClient(
   }
 
   /**
-   * Closes the given staging repositories. Closing a repository triggers the cheks (groupId, pom, signatures, etc...)
+   * Closes the given staging repositories. Closing a repository triggers the checks (groupId, pom, signatures, etc...)
    * It is mandatory to close a repository before it can be released.
    */
   suspend fun closeRepositories(repositoryIds: List<String>) {
