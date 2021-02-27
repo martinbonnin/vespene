@@ -62,9 +62,6 @@ class Upload : CliktCommand() {
       
       🎉 Your files are uploaded 🎉. 
       Go to https://oss.sonatype.org/#stagingRepositories to release them to the world 🚀.
-      
-      **Note**: Please don't release them all at once as it puts a lot of stress on the OSSRH infra and might result
-      in your account being suspended.      
     """.trimIndent()
     )
   }
@@ -128,8 +125,8 @@ class Prepare : CliktCommand() {
   private val pomLicenseName by option()
   private val pomDeveloperName by option()
   private val pomScmUrl by option()
-  private val projectName by option()
-  private val description by option()
+  private val pomProjectName by option()
+  private val pomDescription by option()
   private val versions by option(help = "A file containing a list of versions to transfer. Put one version by line. If not specified, the script will upload everything at once")
 
   override fun run() {
@@ -249,8 +246,8 @@ class Prepare : CliktCommand() {
                 licenseName = pomLicenseName,
                 developerName = pomDeveloperName,
                 scmUrl = pomScmUrl,
-                projectName = projectName,
-                description = description
+                projectName = pomProjectName,
+                description = pomDescription
               )
               if (newPom != null) {
                 dataHasChanged = true
@@ -282,15 +279,20 @@ class Prepare : CliktCommand() {
               originalAsc.copyTo(ascFile)
             }
 
-            val ascMd5File = File(destProjectDir, it.name + ".asc.md5")
-            val originalAscMd5 = File(it.absolutePath + ".asc.md5")
-            if (dataHasChanged || !originalAscMd5.exists()) {
+            /**
+             * This doesn't seem to be required and I'm not sure how that works
+             * Jcenter has some .md5.asc but maven-publish has .asc.md5
+             * Leave it out for now
+             */
+            /*val md5AscFile = File(destProjectDir, it.name + ".md5.asc")
+            val originalMd5Asc = File(it.absolutePath + ".md5.asc")
+            if (dataHasChanged || !originalMd5Asc.exists()) {
               //println("adding ${ascMd5File.name}")
               val asc = ascFile.source().buffer().sign(privateKey, privateKeyPassword)
-              ascMd5File.writeText(asc)
+              md5AscFile.writeText(asc)
             } else {
-              originalAscMd5.copyTo(ascMd5File)
-            }
+              originalMd5Asc.copyTo(md5AscFile)
+            }*/
           }
       }
     }
