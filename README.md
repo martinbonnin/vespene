@@ -32,6 +32,7 @@ To upload with the bundled [upload.kts](upload.kts) script:
 # Use lftp to download your existing files
 # Try not to download all of JCenter if possible 😅
 brew install lftp
+# Here enter the path stopping at the directory of your group id.
 lftp https://jcenter.bintray.com/com/example/
 > mirror . my-local-repo
 # Download the script from this repo
