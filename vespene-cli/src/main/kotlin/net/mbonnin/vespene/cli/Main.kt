@@ -12,7 +12,7 @@ import java.lang.IllegalArgumentException
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
-  MainCommand()
+  MainCommand2()
     .subcommands(UploadCommand())
     .subcommands(Close())
     .subcommands(Release())
@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
     .main(args)
 }
 
-class MainCommand : CliktCommand() {
+class MainCommand2 : CliktCommand() {
   override fun run() {
   }
 }

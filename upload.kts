@@ -6,6 +6,7 @@
 @file:DependsOn("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.2")
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import net.mbonnin.vespene.lib.NexusStagingClient
@@ -19,42 +20,33 @@ import net.mbonnin.vespene.lib.pom.fixIfNeeded
 import net.mbonnin.vespene.sign
 import kotlinx.coroutines.runBlocking
 
-MainCommand().main(args)
+Thread.currentThread().setUncaughtExceptionHandler { _, e ->
+  // OkHttp has threadpools that keep the process alive. kill everything
+  e.printStackTrace()
+  exitProcess(1)
+}
+
+MainCommand().subcommands(Upload(), Prepare()).main(args)
+
+exitProcess(0)
 
 class MainCommand : CliktCommand() {
+  override fun run() {
+  }
+}
+
+class Upload : CliktCommand() {
+  private val input by option(help = "The files downloaded from jcenter. Starting after the groupId, like \$module/\$version/\$module-\$version.jar").required()
+
   private val username by option(help = "your nexus username. For OSSRH, this is your Sonatype jira username. Defaults to reading the 'SONATYPE_NEXUS_USERNAME' environment variable.")
   private val password by option(help = "your nexus password. For OSSRH, this is your Sonatype jira password. Defaults to reading the 'SONATYPE_NEXUS_PASSWORD' environment variable.")
 
-  private val privateKey by option(
-    help = "The file containing the armoured private key that starts with -----BEGIN PGP PRIVATE KEY BLOCK-----." +
-        " It can be obtained with gpg --armour --export-secret-keys KEY_ID. Defaults to reading the 'GPG_PRIVATE_KEY' environment variable."
-  )
-  private val privateKeyPasword by option(
-    help = "The  password for the private key. Defaults to reading the 'GPG_PRIVATE_KEY_PASSWORD' environment variable."
-  )
-
-  private val input by option(help = "The files downloaded from jcenter. Starting after the groupId, like \$module/\$version/\$module-\$version.jar").required()
-  private val scratch by option(help = "A scratch directory where to put temporary files.").required()
-  private val group by option(help = "The group of the coordinates of your modules. It starts with the groupId configured in Sonatype but can be longer").required()
-  private val versions by option(help = "A file containing a list of versions to transfer. Put one version by line. If not specified, the script will upload everything at once")
   private val profileId by option(
     help = "your profileId. For OSSRH, this is what you see when you go to https://oss.sonatype.org/#stagingProfiles;\${profileId}." +
         " Defaults to reading the 'SONATYPE_NEXUS_PROFILE_ID' environment variable. Mandatory if the sonatype account has several profileIds."
   )
-  private val pomProjectUrl by option()
-  private val pomLicenseUrl by option()
-  private val pomLicenseName by option()
-  private val pomDeveloperName by option()
-  private val pomScmUrl by option()
-  private val projectName by option()
-  private val description by option()
 
   override fun run() {
-    Thread.currentThread().setUncaughtExceptionHandler { _, e ->
-      // OkHttp has threadpools that keep the process alive. kill everything
-      e.printStackTrace()
-      exitProcess(1)
-    }
 
     val client = NexusStagingClient(
       username = username ?: System.getenv("SONATYPE_NEXUS_USERNAME")
@@ -63,14 +55,7 @@ class MainCommand : CliktCommand() {
       ?: throw IllegalArgumentException("Please specify --password or SONATYPE_NEXUS_PASSWORD environment variable"),
     )
 
-    val versionsToUpload = getVersions()
-    if (versionsToUpload != null) {
-      versionsToUpload.forEach {
-        uploadFiles(it, "$group:$it", client)
-      }
-    } else {
-      uploadFiles(null, group, client)
-    }
+    uploadFiles(File(input), client)
 
     println(
       """
@@ -82,50 +67,105 @@ class MainCommand : CliktCommand() {
       in your account being suspended.      
     """.trimIndent()
     )
-
-    exitProcess(0)
   }
 
-  private fun uploadFiles(version: String?, comment: String, client: NexusStagingClient) {
-    val scratchDirectory = File(scratch)
-    val inputDirectory = File(input)
-    prepareFiles(
-      inputDirectory,
-      scratchDirectory,
-      group = group,
-      version = version,
-      privateKey = privateKey?.let { File(it).readText() } ?: System.getenv("GPG_PRIVATE_KEY")
-      ?: throw IllegalArgumentException("Please specify --private-key or GPG_PRIVATE_KEY environment variable"),
-      privateKeyPassword = privateKeyPasword ?: System.getenv("GPG_PRIVATE_KEY_PASSWORD")
-      ?: throw IllegalArgumentException("Please specify --private-key-password or GPG_PRIVATE_KEY_PASSWORD environment variable"),
-      comment = comment
-    )
-
-    println("  $comment uploading...")
+  private fun uploadFiles(input: File, client: NexusStagingClient) {
+    println("uploading...")
     var fileCount = 0
     runBlocking {
       val repositoryId = client.upload(
-        directory = scratchDirectory,
+        directory = input,
         profileId = findProfileId(client),
-        comment = comment
+        comment = "Created by vespene"
       ) { index, total, _ ->
         print("\r  $index/$total")
         System.out.flush()
         fileCount = total
       }
       println("\r  $fileCount files uploaded to '$repositoryId'")
-      print("\r  $comment closing...")
+      print("\rclosing...")
       client.closeRepositories(listOf(repositoryId))
+    }
+  }
 
-      /**
-       * Do only one close operation at a time to keep the load on OSSRH light
-       * See https://issues.sonatype.org/browse/OSSRH-64799 for more details
-       */
-      client.waitForClose(repositoryId = repositoryId, pollingIntervalMillis = 10_000) {
-        print(".")
-        System.out.flush()
+  private suspend fun findProfileId(client: NexusStagingClient): String {
+    if (profileId != null) {
+      return profileId!!
+    }
+
+    val envVar = System.getenv("SONATYPE_NEXUS_PROFILE_ID")
+    if (envVar != null) {
+      return envVar
+    }
+
+    println("Looking up profileId...")
+    val allIds = client.getProfiles()
+    check(allIds.size == 1) {
+      val prettyIds = allIds.map {
+        "--profile-id=${it.id} (${it.name})"
+      }.joinToString("\n")
+      "Multiple profileIds found. Use one of:\n${prettyIds}\n"
+    }
+    return allIds.first().id
+  }
+}
+
+class Prepare : CliktCommand() {
+  private val privateKey by option(
+    help = "The file containing the armoured private key that starts with -----BEGIN PGP PRIVATE KEY BLOCK-----." +
+        " It can be obtained with gpg --armour --export-secret-keys KEY_ID. Defaults to reading the 'GPG_PRIVATE_KEY' environment variable."
+  )
+  private val privateKeyPasword by option(
+    help = "The  password for the private key. Defaults to reading the 'GPG_PRIVATE_KEY_PASSWORD' environment variable."
+  )
+
+  private val input by option(help = "The files downloaded from jcenter. Starting after the groupId, like \$module/\$version/\$module-\$version.jar").required()
+  private val output by option(help = "A scratch directory where to put the patched").required()
+  private val group by option(help = "The group of the coordinates of your modules. It starts with the groupId configured in Sonatype but can be longer").required()
+
+  private val pomProjectUrl by option()
+  private val pomLicenseUrl by option()
+  private val pomLicenseName by option()
+  private val pomDeveloperName by option()
+  private val pomScmUrl by option()
+  private val projectName by option()
+  private val description by option()
+  private val versions by option(help = "A file containing a list of versions to transfer. Put one version by line. If not specified, the script will upload everything at once")
+
+  override fun run() {
+    if (File(output).exists()) {
+      print("$output already exists, overwrite? [y/n]")
+      while (true) {
+        when(readLine()) {
+          "y" -> {
+            File(output).deleteRecursively()
+            break
+          }
+          "n" -> exitProcess(0)
+        }
       }
     }
+    val versionsToUpload = getVersions()
+    if (versionsToUpload != null) {
+      versionsToUpload.forEach {
+        prepare(it)
+      }
+    } else {
+      prepare(null)
+    }
+  }
+
+  private fun prepare(version: String?) {
+    prepareFiles(
+      File(input),
+      File(output),
+      group = group,
+      version = version,
+      privateKey = privateKey?.let { File(it).readText() } ?: System.getenv("GPG_PRIVATE_KEY")
+      ?: throw IllegalArgumentException("Please specify --private-key or GPG_PRIVATE_KEY environment variable"),
+      privateKeyPassword = privateKeyPasword ?: System.getenv("GPG_PRIVATE_KEY_PASSWORD")
+      ?: throw IllegalArgumentException("Please specify --private-key-password or GPG_PRIVATE_KEY_PASSWORD environment variable"),
+    )
   }
 
   private fun getVersions(): List<String>? {
@@ -156,38 +196,15 @@ class MainCommand : CliktCommand() {
     }
   }
 
-  private suspend fun findProfileId(client: NexusStagingClient): String {
-    if (profileId != null) {
-      return profileId!!
-    }
-
-    val envVar = System.getenv("SONATYPE_NEXUS_PROFILE_ID")
-    if (envVar != null) {
-      return envVar
-    }
-
-    println("Looking up profileId...")
-    val allIds = client.getProfiles()
-    check(allIds.size == 1) {
-      val prettyIds = allIds.map {
-        "- ${it.name}: --profile-id=${it.id}"
-      }.joinToString("\n")
-      "Multiple profileIds found. Use one of:\n${prettyIds}\n"
-    }
-    return allIds.first().id
-  }
-
   private fun prepareFiles(
     input: File,
-    scratch: File,
+    output: File,
     group: String,
     version: String?,
     privateKey: String,
     privateKeyPassword: String,
-    comment: String
   ) {
-    val dest = File(scratch, group.replace(".", "/"))
-    dest.deleteRecursively()
+    val dest = File(output, group.replace(".", "/"))
 
     val moduleDirs = input.listFiles().filter {
       it.isDirectory
@@ -200,7 +217,13 @@ class MainCommand : CliktCommand() {
         }.sortedBy { it.name }
 
       versionDirs.forEachIndexed { index, versionDirectory ->
-        print("\rpreparing files for ${moduleDir.name} ($moduleIndex/${moduleDirs.size}) version ${versionDirectory.name} ($index/${versionDirs.size})...\u001b[0K")
+        val moduleString = "${moduleDir.name}"
+        val versionString = "version ${versionDirectory.name}"
+        if (version != null) {
+          print("\rpreparing files for $versionString $moduleString...\u001b[0K")
+        } else {
+          print("\rpreparing files for $moduleString $versionString...\u001b[0K")
+        }
 
         versionDirectory.listFiles()
           ?.filter { it.isFile }
@@ -274,4 +297,3 @@ class MainCommand : CliktCommand() {
     println("")
   }
 }
-
