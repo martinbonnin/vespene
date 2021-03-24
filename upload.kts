@@ -112,7 +112,7 @@ class Prepare : CliktCommand() {
     help = "The file containing the armoured private key that starts with -----BEGIN PGP PRIVATE KEY BLOCK-----." +
         " It can be obtained with gpg --armour --export-secret-keys KEY_ID. Defaults to reading the 'GPG_PRIVATE_KEY' environment variable."
   )
-  private val privateKeyPasword by option(
+  private val privateKeyPassword by option(
     help = "The  password for the private key. Defaults to reading the 'GPG_PRIVATE_KEY_PASSWORD' environment variable."
   )
 
@@ -160,7 +160,7 @@ class Prepare : CliktCommand() {
       version = version,
       privateKey = privateKey?.let { File(it).readText() } ?: System.getenv("GPG_PRIVATE_KEY")
       ?: throw IllegalArgumentException("Please specify --private-key or GPG_PRIVATE_KEY environment variable"),
-      privateKeyPassword = privateKeyPasword ?: System.getenv("GPG_PRIVATE_KEY_PASSWORD")
+      privateKeyPassword = privateKeyPassword ?: System.getenv("GPG_PRIVATE_KEY_PASSWORD")
       ?: throw IllegalArgumentException("Please specify --private-key-password or GPG_PRIVATE_KEY_PASSWORD environment variable"),
     )
   }
