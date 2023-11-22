@@ -1,6 +1,6 @@
 [![Maven Central](https://img.shields.io/maven-central/v/net.mbonnin.vespene/vespene-cli)](https://repo1.maven.org/maven2/net/mbonnin/vespene)
 
-⚡ Vespene adds [fuel](https://starcraft.fandom.com/wiki/Vespene_gas) to your [Nexus](https://www.sonatype.com/nexus/repository-oss) repositories.
+⚡ [Vespene](https://starcraft.fandom.com/wiki/Vespene_gas) adds [fuel](https://starcraft.fandom.com/wiki/Vespene_gas) to your [Nexus](https://www.sonatype.com/nexus/repository-oss) repositories.
 
 [Maven Central](https://search.maven.org/) is a great place to host maven packages but publishing often comes with some friction. 
 
