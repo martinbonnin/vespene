@@ -173,7 +173,7 @@ class NexusStagingClient(
     val response = nexusApi.getProfiles()
 
     check(response.isSuccessful) {
-      "getProfiles error:\n${response.errorBody()?.string()}"
+      "getProfiles error '${response.code()}':\n${response.errorBody()?.string()}"
     }
 
     val data = response.body()
