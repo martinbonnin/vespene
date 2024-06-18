@@ -10,7 +10,7 @@ plugins {
 dependencies {
   implementation(project(":vespene-lib"))
   implementation("com.github.ajalt.clikt:clikt:3.1.0")
-  implementation("com.squareup.okio:okio:2.10.0")
+  implementation("com.squareup.okio:okio:3.4.0")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 }
 
