@@ -1,16 +1,12 @@
 plugins {
-  id("maven-publish")
-  id("signing")
-  kotlin("jvm").version("1.4.30").apply(false)
-  kotlin("kapt").version("1.4.30").apply(false)
-  id("net.mbonnin.one.eight").version("0.1").apply(false)
+  id("org.jetbrains.kotlin.jvm").version("2.0.0").apply(false)
+  id("com.google.devtools.ksp").version("2.0.0-1.0.21").apply(false)
+  id("com.gradleup.librarian").version("0.0.3")
 }
 
 group = "net.mbonnin.vespene"
-version = "0.5"
+version = "0.6"
 
-allprojects {
-  repositories {
-    mavenCentral()
-  }
+librarian {
+  root()
 }

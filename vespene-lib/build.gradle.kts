@@ -2,8 +2,9 @@ plugins {
   id("maven-publish")
   `java-library`
   id("signing")
-  kotlin("jvm")
-  kotlin("kapt")
+  id("org.jetbrains.kotlin.jvm")
+  id("com.google.devtools.ksp")
+  id("com.gradleup.librarian")
 }
 
 dependencies {
@@ -15,9 +16,11 @@ dependencies {
   implementation("org.bouncycastle:bcpg-jdk18on:1.78.1")
   implementation("com.squareup.moshi:moshi:1.15.1")
 
-  kapt("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
+  ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
 
   testImplementation("junit:junit:4.13.2")
 }
 
-configurePublishing()
+librarian {
+  module()
+}

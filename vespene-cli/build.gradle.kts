@@ -1,10 +1,9 @@
 plugins {
   id("maven-publish")
   id("signing")
-  kotlin("jvm")
-  kotlin("kapt")
-  id("net.mbonnin.one.eight")
+  id("org.jetbrains.kotlin.jvm")
   id("application")
+  id("com.gradleup.librarian")
 }
 
 dependencies {
@@ -18,4 +17,6 @@ application {
   mainClass.set("net.mbonnin.vespene.cli.MainKt")
 }
 
-configurePublishing()
+librarian {
+  module()
+}
