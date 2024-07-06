@@ -1,6 +1,4 @@
 plugins {
-  id("maven-publish")
-  id("signing")
   id("org.jetbrains.kotlin.jvm")
   id("application")
   id("com.gradleup.librarian")

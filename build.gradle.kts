@@ -4,9 +4,6 @@ plugins {
   id("com.gradleup.librarian").version("0.0.3")
 }
 
-group = "net.mbonnin.vespene"
-version = "0.6"
-
 librarian {
   root()
 }
