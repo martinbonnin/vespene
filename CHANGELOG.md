@@ -1,3 +1,3 @@
 # Next version (unreleased)
 
-Initial release 🎉
+- Update bouncy castle to jdk18on
