@@ -1,0 +1,10 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:vespene-cli
+net.mbonnin.vespene.cli
+module:vespene-lib
+net.mbonnin.vespene
+net.mbonnin.vespene.lib
+net.mbonnin.vespene.lib.pgp
+net.mbonnin.vespene.lib.pom
