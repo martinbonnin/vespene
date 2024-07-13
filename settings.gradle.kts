@@ -12,4 +12,5 @@ pluginManagement {
 
 include(":vespene-lib")
 include(":vespene-cli")
-includeBuild("../librarian")
+
+//includeBuild("../librarian")

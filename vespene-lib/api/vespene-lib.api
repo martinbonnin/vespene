@@ -1,0 +1,142 @@
+public final class net/mbonnin/vespene/SignKt {
+	public static final fun sign (Lokio/BufferedSource;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class net/mbonnin/vespene/lib/ChecksumKt {
+	public static final fun md5 (Lokio/BufferedSource;)Ljava/lang/String;
+	public static final fun sha1 (Lokio/BufferedSource;)Ljava/lang/String;
+}
+
+public final class net/mbonnin/vespene/lib/CreatedRepository {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getStagedRepositoryId ()Ljava/lang/String;
+	public final fun setStagedRepositoryId (Ljava/lang/String;)V
+}
+
+public final class net/mbonnin/vespene/lib/CreatedRepositoryJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public synthetic fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Lnet/mbonnin/vespene/lib/CreatedRepository;
+	public synthetic fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Lnet/mbonnin/vespene/lib/CreatedRepository;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class net/mbonnin/vespene/lib/Data {
+	public fun <init> (Ljava/lang/Object;)V
+	public final fun getData ()Ljava/lang/Object;
+}
+
+public final class net/mbonnin/vespene/lib/DataJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;[Ljava/lang/reflect/Type;)V
+	public synthetic fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Lnet/mbonnin/vespene/lib/Data;
+	public synthetic fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Lnet/mbonnin/vespene/lib/Data;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class net/mbonnin/vespene/lib/Description {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getDescription ()Ljava/lang/String;
+}
+
+public final class net/mbonnin/vespene/lib/DescriptionJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public synthetic fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Lnet/mbonnin/vespene/lib/Description;
+	public synthetic fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Lnet/mbonnin/vespene/lib/Description;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class net/mbonnin/vespene/lib/NexusStagingApi {
+	public abstract fun closeRepositories (Lnet/mbonnin/vespene/lib/Data;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun createRepository (Ljava/lang/String;Lnet/mbonnin/vespene/lib/Data;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun dropRepositories (Lnet/mbonnin/vespene/lib/Data;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getProfiles (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getRepositories (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getRepository (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun releaseRepositories (Lnet/mbonnin/vespene/lib/Data;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class net/mbonnin/vespene/lib/NexusStagingApiKt {
+	public static final fun NexusApi (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lnet/mbonnin/vespene/lib/NexusStagingApi;
+	public static final fun NexusApi (Lokhttp3/OkHttpClient;Ljava/lang/String;)Lnet/mbonnin/vespene/lib/NexusStagingApi;
+	public static synthetic fun NexusApi$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lnet/mbonnin/vespene/lib/NexusStagingApi;
+	public static synthetic fun NexusApi$default (Lokhttp3/OkHttpClient;Ljava/lang/String;ILjava/lang/Object;)Lnet/mbonnin/vespene/lib/NexusStagingApi;
+	public static final fun OkHttpClient (Ljava/lang/String;Ljava/lang/String;)Lokhttp3/OkHttpClient;
+}
+
+public final class net/mbonnin/vespene/lib/NexusStagingClient {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun closeRepositories (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun createRepository (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun createRepository$default (Lnet/mbonnin/vespene/lib/NexusStagingClient;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun dropRepositories (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getProfiles (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getRepositories (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getRepository (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun releaseRepositories (Ljava/util/List;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun upload (Ljava/io/File;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun upload$default (Lnet/mbonnin/vespene/lib/NexusStagingClient;Ljava/io/File;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun waitForClose (Ljava/lang/String;ILkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class net/mbonnin/vespene/lib/Profile {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getId ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+}
+
+public final class net/mbonnin/vespene/lib/ProfileJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public synthetic fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Lnet/mbonnin/vespene/lib/Profile;
+	public synthetic fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Lnet/mbonnin/vespene/lib/Profile;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class net/mbonnin/vespene/lib/Repository {
+	public fun <init> (Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;)V
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getRepositoryId ()Ljava/lang/String;
+	public final fun getTransitioning ()Z
+	public final fun getType ()Ljava/lang/String;
+}
+
+public final class net/mbonnin/vespene/lib/RepositoryJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public synthetic fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Lnet/mbonnin/vespene/lib/Repository;
+	public synthetic fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Lnet/mbonnin/vespene/lib/Repository;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class net/mbonnin/vespene/lib/TransitionRepositoryInput {
+	public fun <init> (Ljava/util/List;Ljava/lang/Boolean;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getAutoDropAfterRelease ()Ljava/lang/Boolean;
+	public final fun getStagedRepositoryIds ()Ljava/util/List;
+}
+
+public final class net/mbonnin/vespene/lib/TransitionRepositoryInputJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public synthetic fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Lnet/mbonnin/vespene/lib/TransitionRepositoryInput;
+	public synthetic fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Lnet/mbonnin/vespene/lib/TransitionRepositoryInput;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class net/mbonnin/vespene/lib/pgp/ArmorKt {
+	public static final fun armor (Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+}
+
+public final class net/mbonnin/vespene/lib/pom/PomKt {
+	public static final fun fixIfNeeded (Ljava/io/File;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+}
+

@@ -1,0 +1,40 @@
+public abstract class net/mbonnin/vespene/cli/BaseCommand : com/github/ajalt/clikt/core/CliktCommand {
+	public fun <init> (Ljava/lang/String;)V
+	public fun run ()V
+	public abstract fun run (Lnet/mbonnin/vespene/lib/NexusStagingClient;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class net/mbonnin/vespene/cli/Close : net/mbonnin/vespene/cli/BaseCommand {
+	public fun <init> ()V
+	public fun run (Lnet/mbonnin/vespene/lib/NexusStagingClient;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class net/mbonnin/vespene/cli/CloseAndRelease : net/mbonnin/vespene/cli/BaseCommand {
+	public fun <init> ()V
+	public fun run (Lnet/mbonnin/vespene/lib/NexusStagingClient;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class net/mbonnin/vespene/cli/Drop : net/mbonnin/vespene/cli/BaseCommand {
+	public fun <init> ()V
+	public fun run (Lnet/mbonnin/vespene/lib/NexusStagingClient;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class net/mbonnin/vespene/cli/MainCommand2 : com/github/ajalt/clikt/core/CliktCommand {
+	public fun <init> ()V
+	public fun run ()V
+}
+
+public final class net/mbonnin/vespene/cli/MainKt {
+	public static final fun main ([Ljava/lang/String;)V
+}
+
+public final class net/mbonnin/vespene/cli/Release : net/mbonnin/vespene/cli/BaseCommand {
+	public fun <init> ()V
+	public fun run (Lnet/mbonnin/vespene/lib/NexusStagingClient;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class net/mbonnin/vespene/cli/UploadCommand : net/mbonnin/vespene/cli/BaseCommand {
+	public fun <init> ()V
+	public fun run (Lnet/mbonnin/vespene/lib/NexusStagingClient;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
