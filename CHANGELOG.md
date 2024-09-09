@@ -1,3 +1,7 @@
 # Next version (unreleased)
 
-- Update bouncy castle to jdk18on
+- Add `PortalClient`
+
+# Version 0.6.0
+
+- Update bouncy castle to use jdk18on
