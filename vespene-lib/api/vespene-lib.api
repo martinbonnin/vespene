@@ -84,6 +84,14 @@ public final class net/mbonnin/vespene/lib/NexusStagingClient {
 	public final fun waitForClose (Ljava/lang/String;ILkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
+public final class net/mbonnin/vespene/lib/PortalClient {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun upload (Ljava/io/File;Ljava/lang/String;Lnet/mbonnin/vespene/lib/PublicationType;)V
+	public final fun upload (Lkotlin/jvm/functions/Function0;JLjava/lang/String;Lnet/mbonnin/vespene/lib/PublicationType;)V
+	public static synthetic fun upload$default (Lnet/mbonnin/vespene/lib/PortalClient;Ljava/io/File;Ljava/lang/String;Lnet/mbonnin/vespene/lib/PublicationType;ILjava/lang/Object;)V
+	public static synthetic fun upload$default (Lnet/mbonnin/vespene/lib/PortalClient;Lkotlin/jvm/functions/Function0;JLjava/lang/String;Lnet/mbonnin/vespene/lib/PublicationType;ILjava/lang/Object;)V
+}
+
 public final class net/mbonnin/vespene/lib/Profile {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun getId ()Ljava/lang/String;
@@ -97,6 +105,14 @@ public final class net/mbonnin/vespene/lib/ProfileJsonAdapter : com/squareup/mos
 	public synthetic fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
 	public fun toJson (Lcom/squareup/moshi/JsonWriter;Lnet/mbonnin/vespene/lib/Profile;)V
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class net/mbonnin/vespene/lib/PublicationType : java/lang/Enum {
+	public static final field AUTOMATIC Lnet/mbonnin/vespene/lib/PublicationType;
+	public static final field USER_MANAGED Lnet/mbonnin/vespene/lib/PublicationType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lnet/mbonnin/vespene/lib/PublicationType;
+	public static fun values ()[Lnet/mbonnin/vespene/lib/PublicationType;
 }
 
 public final class net/mbonnin/vespene/lib/Repository {

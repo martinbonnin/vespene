@@ -1,9 +1,9 @@
-import com.gradleup.librarian.gradle.librarianRoot
+import com.gradleup.librarian.gradle.Librarian
 
 plugins {
-  id("org.jetbrains.kotlin.jvm").version("2.0.0").apply(false)
-  id("com.google.devtools.ksp").version("2.0.0-1.0.23").apply(false)
-  id("com.gradleup.librarian").version("0.0.6")
+  id("org.jetbrains.kotlin.jvm").version("2.3.20-Beta1").apply(false)
+  id("com.google.devtools.ksp").version("2.3.4").apply(false)
+  id("com.gradleup.librarian").version("0.2.2-SNAPSHOT-b82defcba093f4db772683cd32a4e9b511faf1f2").apply(false)
 }
 
-librarianRoot()
+Librarian.root(project)

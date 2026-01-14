@@ -1,4 +1,4 @@
-import com.gradleup.librarian.gradle.librarianModule
+import com.gradleup.librarian.gradle.Librarian
 
 plugins {
   id("org.jetbrains.kotlin.jvm")
@@ -17,4 +17,4 @@ application {
   mainClass.set("net.mbonnin.vespene.cli.MainKt")
 }
 
-librarianModule()
+Librarian.module(project)

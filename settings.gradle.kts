@@ -8,6 +8,9 @@ pluginManagement {
             gradlePluginPortal()
         }
     }
+    repositories {
+        maven("https://storage.googleapis.com/gradleup/m2")
+    }
 }
 
 include(":vespene-lib")
